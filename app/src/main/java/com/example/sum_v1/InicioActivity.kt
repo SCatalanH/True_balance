@@ -26,6 +26,8 @@ class InicioActivity : ComponentActivity() {
                     startActivity(intent)
                 },
                 onRegisterClick = {
+                    val intent = Intent(this, RegistroActivity::class.java)
+                    startActivity(intent)
 
                 }
             )
