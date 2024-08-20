@@ -38,7 +38,7 @@ fun LoginScreen(viewModel: UsuarioViewModel, onLoginSuccess: (String) -> Unit) {
     var password by remember { mutableStateOf("") }
     var mensajeError by remember { mutableStateOf("") }
 
-    val context = LocalContext.current  // Obtener el contexto
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize()

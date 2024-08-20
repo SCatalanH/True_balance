@@ -56,7 +56,7 @@ fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>) {
             Text(
                 text = "¡Bienvenido, $nombreUsuario!",
                 color = Color.White,
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 32.sp),  // Aumentar el tamaño del texto
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 32.sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(24.dp))
