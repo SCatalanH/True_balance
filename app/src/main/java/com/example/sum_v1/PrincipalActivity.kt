@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,20 +19,23 @@ import androidx.compose.ui.unit.sp
 
 
 
+
 class PrincipalActivity : ComponentActivity() {
+    private val usuariosVistaModel = ViewModelSingleton.usuariosViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val nombreUsuario = intent.getStringExtra("nombreUsuario") ?: "Usuario"
 
         setContent {
-            PrincipalScreen(nombreUsuario)
+            PrincipalScreen(nombreUsuario, usuariosVistaModel.listaUsuarios.map { it.nombreUsuario })
         }
     }
 }
 
 @Composable
-fun PrincipalScreen(nombreUsuario: String) {
+fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -44,14 +49,14 @@ fun PrincipalScreen(nombreUsuario: String) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 48.dp),
+                .padding(16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "¡Bienvenido, $nombreUsuario!",
                 color = Color.White,
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 32.sp),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 32.sp),  // Aumentar el tamaño del texto
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -61,6 +66,28 @@ fun PrincipalScreen(nombreUsuario: String) {
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                text = "Usuarios Registrados:",
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            LazyColumn {
+                items(listaUsuarios) { usuario ->
+                    Text(
+                        text = usuario,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
         }
     }
 }
