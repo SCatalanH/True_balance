@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
 class RecuperarPassActivity : ComponentActivity() {
-    private val usuariosVistaModel = ViewModelSingleton.usuariosViewModel  // Usar el Singleton
+    private val usuariosVistaModel = ViewModelSingleton.usuariosViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
