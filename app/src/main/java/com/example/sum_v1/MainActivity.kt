@@ -1,46 +1,52 @@
 package com.example.sum_v1
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
+    private val usuariosVistaModel = ViewModelSingleton.usuariosViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LoginScreen()
+            LoginScreen(usuariosVistaModel) { nombreUsuario ->
+                val intent = Intent(this, PrincipalActivity::class.java)
+                intent.putExtra("nombreUsuario", nombreUsuario)
+                startActivity(intent)
+            }
         }
     }
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: UsuarioViewModel, onLoginSuccess: (String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
+
+    val context = LocalContext.current  // Obtener el contexto
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo_sumativa_2),
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -51,18 +57,6 @@ fun LoginScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-
-
-            Text(
-                text = "Bienvenido a True Balance",
-                color = Color.Companion.White,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(150.dp))
-
             TextField(
                 value = username,
                 onValueChange = { username = it },
@@ -76,32 +70,44 @@ fun LoginScreen() {
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Contraseña") },
-                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { /* TODO */ },
-                modifier = Modifier.width(250.dp),
-                shape = RoundedCornerShape(10.dp)
+                onClick = {
+                    println("Usuarios al intentar login: ${viewModel.listaUsuarios.size}")
+                    println("Usuarios registrados: ${viewModel.listaUsuarios}")
+                    if (viewModel.usuarioExiste(username, password)) {
+                        onLoginSuccess(username)
+                    } else {
+                        mensajeError = "Nombre de usuario o contraseña incorrectos"
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login")
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { /* TODO */ }) {
-                Text("¿Olvidaste la contraseña?")
+            if (mensajeError.isNotEmpty()) {
+                Text(mensajeError, color = Color.Red)
+            }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            TextButton(
+                onClick = {
+                    val intent = Intent(context, RecuperarPassActivity::class.java)
+                    context.startActivity(intent)
+                }
+            ) {
+                Text("¿Olvidaste tu contraseña?", color = Color.White)
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen()
 }
