@@ -41,7 +41,7 @@ fun CategoriaScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo para ingresar el nombre de una nueva categoría
+
         TextField(
             value = nuevaCategoria,
             onValueChange = { nuevaCategoria = it },
@@ -51,7 +51,7 @@ fun CategoriaScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón para agregar la nueva categoría
+
         Button(
             onClick = {
                 if (nuevaCategoria.text.isNotEmpty()) {
@@ -66,7 +66,7 @@ fun CategoriaScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Mostrar la lista de categorías
+
         Text(text = "Categorías Existentes:", style = MaterialTheme.typography.titleMedium)
 
         LazyColumn(
@@ -80,7 +80,7 @@ fun CategoriaScreen() {
                 ) {
                     Text(text = categoria.nombre, style = MaterialTheme.typography.bodyLarge)
 
-                    // Botón para eliminar una categoría
+
                     IconButton(onClick = {
                         CategoriaManager.eliminarCategoria(categoria.nombre)
                     }) {
