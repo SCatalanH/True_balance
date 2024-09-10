@@ -1,7 +1,7 @@
 package com.example.sum_v1
 
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -35,7 +35,8 @@ class PrincipalActivity : ComponentActivity() {
             PrincipalScreen(
                 nombreUsuario = nombreUsuario,
                 listaUsuarios = usuariosVistaModel.listaUsuarios.map { it.nombreUsuario },
-                listaCategorias = CategoriaManager.listaCategorias
+                listaCategorias = CategoriaManager.listaCategorias,
+                listaPublicaciones = PublicacionManager.obtenerPublicaciones()
             )
         }
     }
@@ -43,7 +44,12 @@ class PrincipalActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>, listaCategorias: List<Categoria>) {
+fun PrincipalScreen(
+    nombreUsuario: String,
+    listaUsuarios: List<String>,
+    listaCategorias: List<Categoria>,
+    listaPublicaciones: List<Publicacion>
+) {
     val context = LocalContext.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -51,14 +57,12 @@ fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>, listaCat
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-
                 Text(
                     text = "Categorías",
                     style = MaterialTheme.typography.titleLarge,
@@ -84,7 +88,6 @@ fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>, listaCat
             }
         },
         content = {
-
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -129,17 +132,10 @@ fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>, listaCat
                             style = MaterialTheme.typography.titleLarge.copy(fontSize = 32.sp),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
+
                         Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = "Estamos contentos de tenerte aquí.",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
 
-                        Spacer(modifier = Modifier.height(32.dp))
 
-                        // Botón para gestionar categorías
                         Button(
                             onClick = {
                                 val intent = Intent(context, CategoriaActivity::class.java)
@@ -150,9 +146,20 @@ fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>, listaCat
                             Text("Gestionar Categorías")
                         }
 
+
+                        Button(
+                            onClick = {
+                                val intent = Intent(context, AgregarIngredienteActivity::class.java)
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        ) {
+                            Text("Agregar Ingrediente")
+                        }
+
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        // Mostrar los usuarios registrados
+
                         Text(
                             text = "Usuarios Registrados:",
                             color = Color.White,
@@ -169,6 +176,47 @@ fun PrincipalScreen(nombreUsuario: String, listaUsuarios: List<String>, listaCat
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.padding(8.dp)
                                 )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+
+                        Button(
+                            onClick = {
+                                val intent = Intent(context, CrearPublicacionActivity::class.java)
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        ) {
+                            Text("Crear Publicación")
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+
+                        Text(
+                            text = "Publicaciones:",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+
+                        LazyColumn {
+                            items(listaPublicaciones) { publicacion ->
+                                Button(
+                                    onClick = {
+
+                                        val intent = Intent(context, PublicacionDetalleActivity::class.java).apply {
+                                            putExtra("titulo", publicacion.titulo)
+                                            putExtra("cuerpo", publicacion.cuerpo)
+                                        }
+                                        context.startActivity(intent)
+                                    },
+                                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                                ) {
+                                    Text(publicacion.titulo)
+                                }
                             }
                         }
                     }
