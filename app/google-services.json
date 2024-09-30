@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "708293298876",
+    "project_id": "truebalance-a760f",
+    "storage_bucket": "truebalance-a760f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708293298876:android:cd73e5a163c9b37a1b1eb9",
+        "android_client_info": {
+          "package_name": "com.example.sum_v1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiZb-E2s6vJYImY21-PmRbi4RcZ6Igz9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
