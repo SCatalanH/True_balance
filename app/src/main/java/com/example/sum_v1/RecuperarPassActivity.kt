@@ -1,6 +1,7 @@
 package com.example.sum_v1
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -11,25 +12,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 
 class RecuperarPassActivity : ComponentActivity() {
-    private val usuariosVistaModel = ViewModelSingleton.usuariosViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RecuperarPassScreen(usuariosVistaModel)
+            RecuperarPassScreen()
         }
     }
 }
 
 @Composable
-fun RecuperarPassScreen(viewModel: UsuarioViewModel) {
+fun RecuperarPassScreen() {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var mensajeError by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -77,10 +79,10 @@ fun RecuperarPassScreen(viewModel: UsuarioViewModel) {
 
             Button(
                 onClick = {
-                    if (viewModel.emailExiste(email.text)) {
-                        mensajeError = "Correo electrónico encontrado. Se enviará un correo para recuperar tu contraseña."
+                    if (email.text.isNotEmpty()) {
+                        enviarEmailRecuperacion(email.text, context)
                     } else {
-                        mensajeError = "Error: El correo electrónico no existe."
+                        mensajeError = "Por favor, ingrese un correo electrónico válido."
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -95,4 +97,16 @@ fun RecuperarPassScreen(viewModel: UsuarioViewModel) {
             }
         }
     }
+}
+
+// Función para enviar el correo de recuperación usando Firebase Authentication
+fun enviarEmailRecuperacion(email: String, context: android.content.Context) {
+    FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(context, "Correo de recuperación enviado", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+            }
+        }
 }

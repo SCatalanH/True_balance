@@ -75,8 +75,26 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // JUnit para pruebas unitarias
+    testImplementation("junit:junit:4.13.2")
+    // Mockito para pruebas de dependencias simuladas
+    testImplementation("org.mockito:mockito-core:4.0.0")
+
     //firebase
     implementation(libs.firebase.analytics)
     implementation(platform(libs.firebase.bom))
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:4.0.0")
+
+    // Pruebas de Android
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+
+    // Dependencias Firebase para autenticación y Firestore
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
+
 
 }
